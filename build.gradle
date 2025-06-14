@@ -111,3 +111,73 @@ publishing {
 		// Publishing repositories
 	}
 }
+
+def targetVersions =[
+    "1.21.6-rc1",
+    "1.21.5",
+    "1.21.4",
+    "1.21.3",
+    "1.21.2",
+    "1.21.1",
+    "1.21",
+    "1.20.6",
+    "1.20.5",
+    "1.20.4",
+    "1.20.3",
+    "1.20.2",
+    "1.20.1",
+    "1.20",
+    "1.19.4",
+    "1.19.3",
+    "1.19.2",
+    "1.19.1",
+    "1.19",
+    "1.18.2",
+    "1.18.1",
+    "1.18",
+    "1.17.1",
+    "1.17",
+    "1.16.5",
+    "1.16.4",
+    "1.16.3",
+    "1.16.2",
+    "1.16.1",
+    "1.16",
+    "1.15.2",
+    "1.15.1",
+    "1.15",
+    "1.14.4"
+]
+def versionTaskNames = []
+
+targetVersions.each { mcVersion ->
+    def taskName = "buildFor_${mcVersion.replace('.', '_')}"
+    versionTaskNames.add(taskName)
+
+    tasks.register(taskName, GradleBuild) {
+        group = "build"
+        description = "Builds the mod for Minecraft ${mcVersion}."
+
+        // Propagate existing project properties to the sub-build
+        gradle.startParameter.projectProperties.each { p ->
+            if (p.key != "minecraft_version") {
+                startParameter.projectProperties.put(p.key, p.value)
+            }
+        }
+        // Set the specific minecraft_version for this sub-build
+        startParameter.projectProperties.put("minecraft_version", mcVersion)
+        // Define the tasks to run for the sub-build
+        tasks = ['clean', 'assemble']
+
+        // After the sub-build completes, copy and rename the artifact
+        doLast {
+            copy {
+                from(layout.buildDirectory.file("libs/${project.archives_base_name}-${project.version}.jar"))
+                into(layout.projectDirectory.dir("outputs"))
+                rename { _ -> "${project.archives_base_name}-${mcVersion}.jar" }
+            }
+        }
+    }
+    tasks.getByName(taskName).mustRunAfter(clean)
+}
+
