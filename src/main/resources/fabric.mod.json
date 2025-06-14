@@ -8,8 +8,9 @@
 		"psychedelicpalimpsest"
 	],
 	"contact": {
-		"homepage": "https://fabricmc.net/",
-		"sources": "https://github.com/FabricMC/fabric-example-mod"
+		"homepage": "https://legacy.curseforge.com/minecraft/mc-mods/escape-caps-lock-swapper",
+		"sources": "https://github.com/PsychedelicPalimpsest/esc-capslk-switcher",
+		"issues": "https://github.com/PsychedelicPalimpsest/esc-capslk-switcher/issues"
 	},
 	"license": "AGPL-V3 only",
 	"icon": "assets/capslock-fix/icon.png",
