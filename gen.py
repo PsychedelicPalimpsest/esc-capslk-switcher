@@ -37,4 +37,7 @@ versions = [
 import os
 
 for v in versions:
+    print("==========================================")
+    print(v)
+    print("==========================================")
     os.system(f"./gradlew buildFor_{v.replace('.', '_')}")

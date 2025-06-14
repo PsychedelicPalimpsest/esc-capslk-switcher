@@ -19,7 +19,7 @@
 		"capslock-fix.mixins.json"
 	],
 	"depends": {
-		"fabricloader": ">=0.16.14",
+		"fabricloader": "*",
 		"minecraft": "~${minecraft_version}",
 		"java": ">=21"
 	}
