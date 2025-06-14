@@ -1,0 +1,113 @@
+plugins {
+	id 'fabric-loom' version "${loom_version}"
+	id 'maven-publish'
+}
+
+version = project.mod_version
+group = project.maven_group
+
+base {
+	archivesName = project.archives_base_name
+}
+
+repositories {
+	// Repositories
+}
+
+// Helper functions
+def version_to_comparable(String version) {
+    def parts = version.split('\\.').collect { it.toInteger() }
+    while (parts.size() < 3) {
+        parts.add(0)
+    }
+    return parts[0] * 1000000 + parts[1] * 1000 + parts[2]
+}
+
+def satisfies(String version, List<String> constraint) {
+    def nv = version_to_comparable(version)
+    return nv >= version_to_comparable(constraint[0]) &&
+            nv <= version_to_comparable(constraint[1])
+}
+
+// Define versioned source sets
+def versionedSourceSets = [
+		[dir: "v1_14_4", constraint: ["1.14.4", "1.14.4"]],
+        [dir: "newest", constraint: ["1.15", "9.9.9"]]
+]
+
+// Find the active specification based on the current Minecraft version
+def activeSpec = versionedSourceSets.find {
+    satisfies(project.minecraft_version, it.constraint)
+}
+
+if (!activeSpec) {
+    throw new GradleException("No matching source set found for Minecraft version ${project.minecraft_version}")
+}
+
+def activeMixinDir = activeSpec.dir
+def allMixinDirs = versionedSourceSets.collect { it.dir }
+def inactiveMixinDirs = allMixinDirs - [activeMixinDir]
+
+// Configure source sets to exclude inactive directories from compilation
+sourceSets {
+    main {
+        java {
+            inactiveMixinDirs.each { dir ->
+                // Exclude any directory matching the inactive names
+                exclude "**/$dir/**"
+            }
+        }
+    }
+}
+
+dependencies {
+	minecraft "com.mojang:minecraft:${project.minecraft_version}"
+    mappings("net.fabricmc:yarn:${project.minecraft_version}+build.1")
+	modImplementation "net.fabricmc:fabric-loader:${project.loader_version}"
+}
+
+tasks.withType(JavaCompile).configureEach {
+	it.options.release = 21
+}
+
+java {
+	withSourcesJar()
+	sourceCompatibility = JavaVersion.VERSION_21
+	targetCompatibility = JavaVersion.VERSION_21
+}
+
+jar {
+	inputs.property "archivesName", project.base.archivesName
+	from("LICENSE") {
+		rename { "${it}_${inputs.properties.archivesName}"}
+	}
+}
+
+processResources {
+    inputs.property "version", project.version
+    inputs.property "minecraft_version", project.minecraft_version
+    inputs.property "mixin_version", activeMixinDir
+
+    filesMatching("fabric.mod.json") {
+        expand(
+                "version": project.version,
+                "minecraft_version": project.minecraft_version
+        )
+    }
+
+    filesMatching("capslock-fix.mixins.json") {
+        expand "mixins": activeMixinDir
+    }
+}
+
+publishing {
+	publications {
+		create("mavenJava", MavenPublication) {
+			artifactId = project.archives_base_name
+			from components.java
+		}
+	}
+	repositories {
+		// Publishing repositories
+	}
+}

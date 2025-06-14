@@ -1,0 +1,25 @@
+{
+	"schemaVersion": 1,
+	"id": "capslock-fix",
+	"version": "${version}",
+	"name": "Capslock fix",
+	"description": "Make vim linux users happy",
+	"authors": [
+		"psychedelicpalimpsest"
+	],
+	"contact": {
+		"homepage": "https://fabricmc.net/",
+		"sources": "https://github.com/FabricMC/fabric-example-mod"
+	},
+	"license": "AGPL-V3 only",
+	"icon": "assets/capslock-fix/icon.png",
+	"environment": "client",
+	"mixins": [
+		"capslock-fix.mixins.json"
+	],
+	"depends": {
+		"fabricloader": ">=0.16.14",
+		"minecraft": "~${minecraft_version}",
+		"java": ">=21"
+	}
+}
