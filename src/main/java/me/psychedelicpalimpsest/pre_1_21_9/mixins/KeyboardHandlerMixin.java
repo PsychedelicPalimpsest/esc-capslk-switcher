@@ -1,4 +1,4 @@
- /**
+/**
  * Copyright (C) 2025 - PsychedelicPalimpsest
  *
  * This program is free software: you can redistribute it and/or modify
@@ -15,23 +15,23 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 
-package me.psychedelicpalimpsest.newest;
+package me.psychedelicpalimpsest.pre_1_21_9.mixins;
 
- import me.psychedelicpalimpsest.KeyboardOverride;
- import net.minecraft.client.Keyboard;
- import net.minecraft.client.MinecraftClient;
+ import me.psychedelicpalimpsest.pre_1_21_9.KeyboardOverride;
+ import net.minecraft.client.KeyboardHandler;
+ import net.minecraft.client.Minecraft;
  import org.spongepowered.asm.mixin.Mixin;
  import org.spongepowered.asm.mixin.injection.At;
  import org.spongepowered.asm.mixin.injection.Redirect;
 
- @Mixin(MinecraftClient.class)
-public class MinecraftClientMixin {
+ @Mixin(Minecraft.class)
+public class KeyboardHandlerMixin {
 
      @Redirect(
              method = "<init>",
-             at = @At(value = "NEW", target = "net/minecraft/client/Keyboard")
+             at = @At(value = "NEW", target = "net/minecraft/client/KeyboardHandler")
      )
-     private Keyboard redirectKeyboard(MinecraftClient client) {
+     private KeyboardHandler redirectKeyboard(Minecraft client) {
          return new KeyboardOverride(client);
      }
 }

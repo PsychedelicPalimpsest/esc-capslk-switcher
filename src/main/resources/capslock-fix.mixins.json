@@ -1,6 +1,6 @@
 {
 	"required": true,
-	"package": "me.psychedelicpalimpsest.${mixins}",
+	"package": "me.psychedelicpalimpsest.${mixins}.mixins",
 	"compatibilityLevel": "JAVA_21",
 	"mixins": [
 	],
@@ -8,6 +8,6 @@
 		"defaultRequire": 1
 	},
 	"client": [
-		"MinecraftClientMixin"
+		"KeyboardHandlerMixin"
 	]
 }

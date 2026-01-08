@@ -1,4 +1,5 @@
- /**
+package me.psychedelicpalimpsest.pre_1_21_9;
+/**
  * Copyright (C) 2025 - PsychedelicPalimpsest
  *
  * This program is free software: you can redistribute it and/or modify
@@ -14,24 +15,24 @@
  * You should have received a copy of the GNU Affero General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
+import net.minecraft.client.KeyboardHandler;
+import net.minecraft.client.Minecraft;
+import org.lwjgl.glfw.GLFW;
 
-package me.psychedelicpalimpsest.v1_14_4;
+public class KeyboardOverride extends KeyboardHandler {
 
- import me.psychedelicpalimpsest.KeyboardOverride;
- import net.minecraft.client.Keyboard;
- import net.minecraft.client.MinecraftClient;
- import org.spongepowered.asm.mixin.Mixin;
- import org.spongepowered.asm.mixin.injection.At;
- import org.spongepowered.asm.mixin.injection.Redirect;
 
- @Mixin(MinecraftClient.class)
-public class MinecraftClientMixin {
+    public KeyboardOverride(Minecraft client) {
+        super(client);
+    }
 
-     @Redirect(
-             method = "init",
-             at = @At(value = "NEW", target = "net/minecraft/client/Keyboard")
-     )
-     private Keyboard redirectKeyboard(MinecraftClient client) {
-         return new KeyboardOverride(client);
-     }
+    @Override
+    public void keyPress(long window, int key, int scancode, int action, int modifiers) {
+        if (key == GLFW.GLFW_KEY_ESCAPE) key = GLFW.GLFW_KEY_CAPS_LOCK;
+        else if (key == GLFW.GLFW_KEY_CAPS_LOCK) key = GLFW.GLFW_KEY_ESCAPE;
+
+
+        super.keyPress(window, key, scancode, action, modifiers);
+
+    }
 }

@@ -31,8 +31,8 @@ def satisfies(String version, List<String> constraint) {
 
 // Define versioned source sets
 def versionedSourceSets = [
-		[dir: "v1_14_4", constraint: ["1.14.4", "1.14.4"]],
-        [dir: "newest", constraint: ["1.15", "9.9.9"]]
+        [dir: "pre_1_21_9", constraint: ["1.15", "1.21.8"]],
+        [dir: "newest", constraint: ["1.21.9", "9.9.9"]]
 ]
 
 // Find the active specification based on the current Minecraft version
@@ -61,9 +61,9 @@ sourceSets {
 }
 
 dependencies {
-	minecraft "com.mojang:minecraft:${project.minecraft_version}"
-    mappings("net.fabricmc:yarn:${project.minecraft_version}+build.1")
-	modImplementation "net.fabricmc:fabric-loader:${project.loader_version}"
+    minecraft "com.mojang:minecraft:${project.minecraft_version}"
+    mappings loom.officialMojangMappings()
+    modImplementation "net.fabricmc:fabric-loader:${project.loader_version}"
 }
 
 tasks.withType(JavaCompile).configureEach {
@@ -113,7 +113,12 @@ publishing {
 }
 
 def targetVersions =[
-    "1.21.6-rc1",
+    "1.21.11",
+    "1.21.10",
+    "1.21.9",
+    "1.21.8",
+    "1.21.7",
+    "1.21.6",
     "1.21.5",
     "1.21.4",
     "1.21.3",
@@ -143,10 +148,6 @@ def targetVersions =[
     "1.16.2",
     "1.16.1",
     "1.16",
-    "1.15.2",
-    "1.15.1",
-    "1.15",
-    "1.14.4"
 ]
 def versionTaskNames = []
 
@@ -180,4 +181,3 @@ targetVersions.each { mcVersion ->
     }
     tasks.getByName(taskName).mustRunAfter(clean)
 }
-
