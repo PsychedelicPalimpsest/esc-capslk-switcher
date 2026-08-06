@@ -112,6 +112,7 @@ publishing {
 }
 
 def targetVersions =[
+    "26.2",
     "26.1.2",
     "1.21.11",
     "1.21.10",
