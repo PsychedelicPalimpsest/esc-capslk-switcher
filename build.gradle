@@ -1,5 +1,5 @@
 plugins {
-	id 'fabric-loom' version "${loom_version}"
+    id 'net.fabricmc.fabric-loom' version "${loom_version}"
 	id 'maven-publish'
 }
 
@@ -32,7 +32,7 @@ def satisfies(String version, List<String> constraint) {
 // Define versioned source sets
 def versionedSourceSets = [
         [dir: "pre_1_21_9", constraint: ["1.15", "1.21.8"]],
-        [dir: "newest", constraint: ["1.21.9", "9.9.9"]]
+        [dir: "newest", constraint: ["1.21.9", "99.9.9"]]
 ]
 
 // Find the active specification based on the current Minecraft version
@@ -61,19 +61,18 @@ sourceSets {
 }
 
 dependencies {
-    minecraft "com.mojang:minecraft:${project.minecraft_version}"
-    mappings loom.officialMojangMappings()
-    modImplementation "net.fabricmc:fabric-loader:${project.loader_version}"
+	minecraft "com.mojang:minecraft:${project.minecraft_version}"
+	implementation "net.fabricmc:fabric-loader:${project.loader_version}"
 }
 
 tasks.withType(JavaCompile).configureEach {
-	it.options.release = 21
+	it.options.release = 25
 }
 
 java {
 	withSourcesJar()
-	sourceCompatibility = JavaVersion.VERSION_21
-	targetCompatibility = JavaVersion.VERSION_21
+	sourceCompatibility = JavaVersion.VERSION_25
+	targetCompatibility = JavaVersion.VERSION_25
 }
 
 jar {
@@ -113,6 +112,8 @@ publishing {
 }
 
 def targetVersions =[
+    "26.2",
+    "26.1.2",
     "1.21.11",
     "1.21.10",
     "1.21.9",
@@ -181,3 +182,4 @@ targetVersions.each { mcVersion ->
     }
     tasks.getByName(taskName).mustRunAfter(clean)
 }
+

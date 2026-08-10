@@ -1,0 +1,14 @@
+modLoader="javafml"
+loaderVersion="[4,)"
+license="AGPL-3.0"
+
+[[mods]]
+modId="capslockswitch"
+version="${version}"
+displayName="Capslock-Escape Switcher"
+description='''
+Swaps the escape and capslock button in Minecraft.
+'''
+
+[[mixins]]
+config="capslock-fix.mixins.json"

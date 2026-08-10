@@ -1,0 +1,59 @@
+plugins {
+    id 'java-library'
+    id 'net.neoforged.moddev' version '2.0.143'
+}
+
+version = project.mod_version
+group = project.maven_group
+base {
+    archivesName = "${project.archives_base_name}-neoforge"
+}
+
+java.toolchain.languageVersion = JavaLanguageVersion.of(21)
+
+sourceSets {
+    main {
+        java.srcDirs = ['../src/main/java']
+        resources.srcDirs = ['../src/main/resources', 'src/main/resources']
+        java {
+            exclude "**/newest/**"
+        }
+    }
+}
+
+neoForge {
+    version = "21.1.240"
+
+    parchment {
+        minecraftVersion = "1.21.1"
+        mappingsVersion = "2024.11.17"
+    }
+
+    runs {
+        client {
+            client()
+        }
+    }
+
+    mods {
+        "capslockswitch" {
+            sourceSet(sourceSets.main)
+        }
+    }
+}
+
+processResources {
+    def activeMixinDir = "pre_1_21_9"
+    inputs.property "version", project.version
+    inputs.property "mixin_version", activeMixinDir
+
+    filesMatching("META-INF/neoforge.mods.toml") {
+        expand(
+            "version": project.version
+        )
+    }
+
+    filesMatching("capslock-fix.mixins.json") {
+        expand "mixins": activeMixinDir
+    }
+}
